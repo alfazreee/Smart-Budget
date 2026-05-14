@@ -1,6 +1,7 @@
 package com.mahesa0004.smartbudget.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,15 +37,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mahesa0004.smartbudget.R
 import com.mahesa0004.smartbudget.ui.theme.SmartBudgetTheme
+import com.mahesa0004.smartbudget.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BiayaBulananScreen(
-    navController: NavHostController,
-    viewModel: MainViewModel = viewModel()
-) {
+fun BiayaBulananScreen(navController: NavHostController) {
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+
     val budget by viewModel.budget.collectAsState()
-    var budgetInput by remember { mutableStateOf(budget.toLong().toString()) }
+    var budgetInput by remember(budget) {
+        mutableStateOf(if (budget > 0) budget.toLong().toString() else "")
+    }
 
     Scaffold(
         topBar = {
@@ -62,9 +68,12 @@ fun BiayaBulananScreen(
                 actions = {
                     IconButton(onClick = {
                         val newBudget = budgetInput.toDoubleOrNull()
-                        if (newBudget != null) {
-                            viewModel.updateBudget(newBudget)
+                        if (budgetInput.isBlank() || newBudget == null || newBudget <= 0){
+                            Toast.makeText(context, context.getString(R.string.budget_kosong),
+                                Toast.LENGTH_LONG).show()
+                            return@IconButton
                         }
+                        viewModel.updateBudget(newBudget)
                         navController.popBackStack()
                     }) {
                         Icon(

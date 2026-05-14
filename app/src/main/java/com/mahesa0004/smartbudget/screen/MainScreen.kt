@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,13 +43,16 @@ import androidx.navigation.compose.rememberNavController
 import com.mahesa0004.smartbudget.R
 import com.mahesa0004.smartbudget.navigation.Screen
 import com.mahesa0004.smartbudget.ui.theme.SmartBudgetTheme
+import com.mahesa0004.smartbudget.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
-    navController: NavController,
-    viewModel: MainViewModel = viewModel()
-) {
+fun MainScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -74,13 +78,15 @@ fun MainScreen(
 fun ScreenContent(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel
 ) {
     val budget by viewModel.budget.collectAsState()
     val spent by viewModel.spent.collectAsState()
 
     Column(
-        modifier = modifier.fillMaxSize().padding(32.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -98,18 +104,19 @@ fun ScreenContent(
             spent = spent,
             budget = budget,
             onClick = {
-            navController.navigate(Screen.BiayaBulanan.route)
-        })
+                navController.navigate(Screen.BiayaBulanan.route)
+            }
+        )
     }
 }
 
 @Composable
 fun BiayaBulananCard(
-    spent : Double,
-    budget : Double,
-    onClick: () -> Unit = {}) {
-
-    val progress = (spent / budget).toFloat().coerceIn(0f, 1f)
+    spent: Double,
+    budget: Double,
+    onClick: () -> Unit = {}
+) {
+    val progress = if (budget > 0) (spent / budget).toFloat().coerceIn(0f, 1f) else 0f
     val date = remember {
         val sdf = java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
         sdf.format(java.util.Date())
@@ -122,26 +129,14 @@ fun BiayaBulananCard(
             .padding(top = 32.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFB3C6F5))
     ) {
-
-        Column(
-            modifier = Modifier.padding(18.dp)
-        ) {
+        Column(modifier = Modifier.padding(18.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Text(
-                    text = "Biaya bulanan",
-                    color = Color.Black,
-                    modifier = Modifier.padding(2.dp)
-                )
-                Text(
-                    text = date,
-                    color = Color.Black,
-                    modifier = Modifier.padding(2.dp)
-                )
+                Text(text = "Biaya bulanan", color = Color.Black, modifier = Modifier.padding(2.dp))
+                Text(text = date, color = Color.Black, modifier = Modifier.padding(2.dp))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -151,9 +146,7 @@ fun BiayaBulananCard(
                     .fillMaxWidth()
                     .height(32.dp)
                     .clip(RoundedCornerShape(50))
-            ){
-
-
+            ) {
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier
@@ -163,7 +156,6 @@ fun BiayaBulananCard(
                     color = Color(0xFF3D4F6B),
                     trackColor = Color(0xFFE0E0E0),
                     strokeCap = StrokeCap.Butt
-
                 )
                 Text(
                     text = formatRupiah(spent),
@@ -186,8 +178,8 @@ fun BiayaBulananCard(
     }
 }
 
-fun formatRupiah(mount: Double) : String {
-    val formatted = String.format("%,.0f", mount).replace(',','.')
+fun formatRupiah(mount: Double): String {
+    val formatted = String.format("%,.0f", mount).replace(',', '.')
     return "Rp$formatted"
 }
 

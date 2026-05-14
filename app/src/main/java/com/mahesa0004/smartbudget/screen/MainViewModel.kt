@@ -1,18 +1,31 @@
 package com.mahesa0004.smartbudget.screen
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.lifecycle.viewModelScope
+import com.mahesa0004.smartbudget.database.BudgetDao
+import com.mahesa0004.smartbudget.model.Budget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val dao: BudgetDao) : ViewModel() {
 
-    private val _budget = MutableStateFlow(1500000.0)
-    val budget: StateFlow<Double> = _budget
+    val budget: StateFlow<Double> = dao.getBudget()
+        .map { it?.amount ?: 0.0 }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0.0
+        )
 
-    private val _spent = MutableStateFlow(600000.0)
-    val spent: StateFlow<Double> = _spent
-
+    val spent: StateFlow<Double> = kotlinx.coroutines.flow.MutableStateFlow(0.0)
+    
     fun updateBudget(newBudget: Double) {
-        _budget.value = newBudget
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.upsert(Budget(id = 1L, amount = newBudget))
+        }
     }
 }

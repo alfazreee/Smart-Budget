@@ -7,4 +7,5 @@
     <string name="budget">Budget</string>
     <string name="per_bulan">/bulan</string>
     <string name="simpan">Simpan</string>
+    <string name="budget_kosong">Budget tidak boleh kosong</string>
 </resources>
