@@ -50,7 +50,6 @@ fun BiayaBulananScreen(navController: NavHostController) {
     var budgetInput by remember(budget) {
         mutableStateOf(if (budget > 0) budget.toLong().toString() else "")
     }
-
     Scaffold(
         topBar = {
             TopAppBar(

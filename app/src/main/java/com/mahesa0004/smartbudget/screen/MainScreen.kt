@@ -48,6 +48,8 @@ import com.mahesa0004.smartbudget.R
 import com.mahesa0004.smartbudget.navigation.Screen
 import com.mahesa0004.smartbudget.ui.theme.SmartBudgetTheme
 import com.mahesa0004.smartbudget.util.ViewModelFactory
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,6 +100,7 @@ fun ScreenContent(
 ) {
     val budget by viewModel.budget.collectAsState()
     val spent by viewModel.spent.collectAsState()
+    val pengeluaranList by viewModel.pengeluaranList.collectAsState()
 
     Column(
         modifier = modifier
@@ -123,6 +126,44 @@ fun ScreenContent(
                 navController.navigate(Screen.BiayaBulanan.route)
             }
         )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            items(pengeluaranList) { item ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFE0E0E0)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = item.kategori,
+                                fontSize = 22.sp
+                            )
+                            Text(
+                                text = item.tanggal,
+                                fontSize = 14.sp
+                            )
+                        }
+                        Text(
+                            text = "-${formatRupiah(item.nominal)}",
+                            fontSize = 20.sp
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

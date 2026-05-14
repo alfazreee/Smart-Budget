@@ -12,9 +12,12 @@ class ViewModelFactory(
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val dao = SmartBudgetDb.getInstance(context).budgetDao
+        val db = SmartBudgetDb.getInstance(context)
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(dao) as T
+            return MainViewModel(
+                db.budgetDao,
+                db.pengeluaranDao
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
