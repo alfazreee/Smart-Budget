@@ -2,4 +2,9 @@
     <string name="app_name">Smart Budget</string>
     <string name="logo_aplikasi">Logo Aplikasi</string>
     <string name="Bagikan">Bagikan</string>
+    <string name="biaya_bulanan">Biaya bulanan</string>
+    <string name="kembali">Kembali</string>
+    <string name="budget">Budget</string>
+    <string name="per_bulan">/bulan</string>
+    <string name="simpan">Simpan</string>
 </resources>
