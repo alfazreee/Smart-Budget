@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mahesa0004.smartbudget.screen.BiayaBulananScreen
 import com.mahesa0004.smartbudget.screen.MainScreen
+import com.mahesa0004.smartbudget.screen.TambahPengeluaranScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
@@ -19,6 +20,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         }
         composable(route = Screen.BiayaBulanan.route) {
             BiayaBulananScreen(navController)
+        }
+        composable(route = Screen.TambahPengeluaran.route) {
+            TambahPengeluaranScreen(navController)
         }
     }
 }

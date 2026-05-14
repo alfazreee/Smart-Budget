@@ -8,4 +8,13 @@
     <string name="per_bulan">/bulan</string>
     <string name="simpan">Simpan</string>
     <string name="budget_kosong">Budget tidak boleh kosong</string>
+    <string name="tambah_pengeluaran">Tambah pengeluaran</string>
+    <string name="input_pengeluaran">Input pengeluaran</string>
+    <string name="makanan">Makanan</string>
+    <string name="transportasi">Transportasi</string>
+    <string name="belanja">Belanja</string>
+    <string name="hiburan">Hiburan</string>
+    <string name="tagihan">Tagihan</string>
+    <string name="tabungan">Tabungan</string>
+    <string name="lainnya">Lainnya</string>
 </resources>
