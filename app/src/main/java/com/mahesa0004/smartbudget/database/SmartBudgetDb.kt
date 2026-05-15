@@ -16,7 +16,6 @@ import com.mahesa0004.smartbudget.model.Pengeluaran
     exportSchema = false
 )
 abstract class SmartBudgetDb : RoomDatabase() {
-
     abstract val budgetDao: BudgetDao
     abstract val pengeluaranDao: PengeluaranDao
     companion object {

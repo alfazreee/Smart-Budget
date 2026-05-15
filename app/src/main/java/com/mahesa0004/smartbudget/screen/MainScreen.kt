@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -27,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,16 +55,17 @@ import com.mahesa0004.smartbudget.navigation.Screen
 import com.mahesa0004.smartbudget.ui.theme.SmartBudgetTheme
 import com.mahesa0004.smartbudget.util.SettingsDataStore
 import com.mahesa0004.smartbudget.util.ViewModelFactory
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
-
+fun MainScreen(
+    navController: NavController,
+    isDarkTheme: Boolean = false,
+    onThemeToggle: (Boolean) -> Unit = {}
+) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
@@ -80,6 +83,16 @@ fun MainScreen(navController: NavController) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 actions = {
+                    Icon(
+                        painter =  painterResource(if (isDarkTheme) R.drawable.outline_nightlight_24 else R.drawable.baseline_wb_sunny_24),
+                        contentDescription = stringResource(if (isDarkTheme)R.string.mode_gelap else R.string.mode_terang),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Switch(
+                        checked = isDarkTheme,
+                        onCheckedChange = { onThemeToggle(it) },
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
                     IconButton(onClick = {
                         CoroutineScope(Dispatchers.IO).launch {
                             dataStore.saveLayout(!showList)
@@ -166,15 +179,13 @@ fun ScreenContent(
                 items(pengeluaranList) { item ->
                     Card(
                         onClick = {
-                            navController.navigate(
-                                Screen.UbahPengeluaran.withId(item.id)
-                            )
+                            navController.navigate(Screen.UbahPengeluaran.withId(item.id))
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFE0E0E0)
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                     ) {
                         Row(
@@ -184,20 +195,11 @@ fun ScreenContent(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text(
-                                    text = item.kategori,
-                                    fontSize = 18.sp
-                                )
+                                Text(text = item.kategori, fontSize = 18.sp)
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(
-                                    text = item.tanggal,
-                                    fontSize = 14.sp
-                                )
+                                Text(text = item.tanggal, fontSize = 14.sp)
                             }
-                            Text(
-                                text = "-${formatRupiah(item.nominal)}",
-                                fontSize = 16.sp
-                            )
+                            Text(text = "-${formatRupiah(item.nominal)}", fontSize = 16.sp)
                         }
                     }
                 }
@@ -214,30 +216,19 @@ fun ScreenContent(
                 items(pengeluaranList) { item ->
                     Card(
                         onClick = {
-                            navController.navigate(
-                                Screen.UbahPengeluaran.withId(item.id)
-                            )
+                            navController.navigate(Screen.UbahPengeluaran.withId(item.id))
                         },
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFE0E0E0)
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                     ) {
                         Column(
                             modifier = Modifier.padding(12.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(
-                                text = item.kategori,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = "-${formatRupiah(item.nominal)}",
-                                fontSize = 14.sp
-                            )
-                            Text(
-                                text = item.tanggal,
-                                fontSize = 12.sp
-                            )
+                            Text(text = item.kategori, fontSize = 16.sp)
+                            Text(text = "-${formatRupiah(item.nominal)}", fontSize = 14.sp)
+                            Text(text = item.tanggal, fontSize = 12.sp)
                         }
                     }
                 }
@@ -263,7 +254,7 @@ fun BiayaBulananCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFB3C6F5))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Row(
@@ -271,12 +262,10 @@ fun BiayaBulananCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(R.string.biaya_bulanan), color = Color.Black, modifier = Modifier.padding(2.dp))
-                Text(text = date, color = Color.Black, modifier = Modifier.padding(2.dp))
+                Text(text = stringResource(R.string.biaya_bulanan), modifier = Modifier.padding(2.dp))
+                Text(text = date, modifier = Modifier.padding(2.dp))
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -289,33 +278,30 @@ fun BiayaBulananCard(
                         .fillMaxWidth()
                         .height(32.dp)
                         .clip(RoundedCornerShape(50)),
-                    color = Color(0xFF3D4F6B),
-                    trackColor = Color(0xFFE0E0E0),
-                    strokeCap = StrokeCap.Butt
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    strokeCap = StrokeCap.Butt,
+                    gapSize = 0.dp
                 )
                 Text(
                     text = formatRupiah(spent),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 12.sp,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 12.dp)
+                    modifier = Modifier.align(Alignment.CenterStart).padding(start = 12.dp)
                 )
                 Text(
                     text = formatRupiah(budget),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 12.sp,
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 12.dp)
+                    modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp)
                 )
             }
         }
     }
 }
 
-fun formatRupiah(mount: Double): String {
-    val formatted = String.format("%,.0f", mount).replace(',', '.')
+fun formatRupiah(amount: Double): String {
+    val formatted = String.format("%,.0f", amount).replace(',', '.')
     return "Rp$formatted"
 }
 

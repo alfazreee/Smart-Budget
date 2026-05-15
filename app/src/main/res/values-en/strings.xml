@@ -29,4 +29,6 @@
     <string name="bagikan_template">Category: %1$s[...]</string>
     <string name="list">List View</string>
     <string name="grid">Grid View</string>
+    <string name="mode_gelap">Dark mode</string>
+    <string name="mode_terang">Light mode</string>
 </resources>

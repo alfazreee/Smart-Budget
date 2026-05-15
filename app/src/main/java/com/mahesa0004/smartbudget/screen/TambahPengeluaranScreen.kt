@@ -74,27 +74,13 @@ fun TambahPengeluaranScreen(navController: NavHostController) {
                     IconButton(
                         onClick = {
                             val nominal = inputPengeluaran.toDoubleOrNull()
-                            if (
-                                nominal == null ||
-                                nominal <= 0 ||
-                                selectedKategori.isBlank()
-                            ) {
-                                Toast.makeText(
-                                    context,
+                            if (nominal == null || nominal <= 0 || selectedKategori.isBlank()) { Toast.makeText(context,
                                     context.getString(R.string.input_pengeluaran),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
+                                    Toast.LENGTH_SHORT).show()
                                 return@IconButton
                             }
                             val sisaBudget = budget - spent
-                            if (nominal > sisaBudget) {
-                                Toast.makeText(
-                                    context,
-                                    "Budget tidak cukup",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
+                            if (nominal > sisaBudget) { Toast.makeText(context, "Budget tidak cukup", Toast.LENGTH_SHORT).show()
                                 return@IconButton
                             }
                             viewModel.tambahPengeluaran(

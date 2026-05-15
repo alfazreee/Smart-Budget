@@ -11,13 +11,21 @@ import com.mahesa0004.smartbudget.screen.TambahPengeluaranScreen
 import com.mahesa0004.smartbudget.screen.UbahPengeluaranScreen
 
 @Composable
-fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
+fun SetupNavGraph(
+    navController: NavHostController = rememberNavController(),
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit
+) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            MainScreen(navController)
+            MainScreen(
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onThemeToggle = onThemeToggle
+            )
         }
         composable(route = Screen.BiayaBulanan.route) {
             BiayaBulananScreen(navController)

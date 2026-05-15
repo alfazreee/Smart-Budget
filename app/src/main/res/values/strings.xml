@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Smart Budget</string>
     <string name="logo_aplikasi">Logo Aplikasi</string>
-    <string name="tagline">Anggaran Cerdas, Hidup Sederhana.</string>
+    <string name="tagline">Budget Cerdas, Hidup Simple.</string>
     <string name="Bagikan">Bagikan</string>
     <string name="biaya_bulanan">Biaya bulanan</string>
     <string name="kembali">Kembali</string>
@@ -28,4 +28,6 @@
     <string name="bagikan_template">Kategori: %1$s\nNominal: Rp %2$s\nTanggal: %3$s</string>
     <string name="list">Tampilan list</string>
     <string name="grid">Tampilan grid</string>
+    <string name="mode_gelap">Mode gelap</string>
+    <string name="mode_terang">Mode terang</string>
 </resources>

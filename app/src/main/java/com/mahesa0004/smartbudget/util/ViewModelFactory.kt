@@ -9,7 +9,6 @@ import com.mahesa0004.smartbudget.screen.MainViewModel
 class ViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {
-
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val db = SmartBudgetDb.getInstance(context)
