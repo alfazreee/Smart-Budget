@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BudgetDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(budget: Budget)
 

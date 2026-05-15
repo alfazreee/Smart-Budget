@@ -4,4 +4,9 @@ sealed class Screen(val route: String) {
     data object Home : Screen("mainScreen")
     data object BiayaBulanan : Screen("biayaBulananScreen")
     data object TambahPengeluaran: Screen("tambahPengeluaranScreen")
+    data object UbahPengeluaran :
+        Screen("ubahPengeluaranScreen/{id}") {
+        fun withId(id: Long) =
+            "ubahPengeluaranScreen/$id"
+    }
 }

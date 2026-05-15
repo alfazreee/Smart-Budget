@@ -133,6 +133,11 @@ fun ScreenContent(
         ) {
             items(pengeluaranList) { item ->
                 Card(
+                    onClick = {
+                        navController.navigate(
+                            Screen.UbahPengeluaran.withId(item.id)
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
@@ -149,8 +154,9 @@ fun ScreenContent(
                         Column {
                             Text(
                                 text = item.kategori,
-                                fontSize = 22.sp
+                                fontSize = 18.sp
                             )
+                            Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 text = item.tanggal,
                                 fontSize = 14.sp
@@ -158,7 +164,7 @@ fun ScreenContent(
                         }
                         Text(
                             text = "-${formatRupiah(item.nominal)}",
-                            fontSize = 20.sp
+                            fontSize = 16.sp
                         )
                     }
                 }

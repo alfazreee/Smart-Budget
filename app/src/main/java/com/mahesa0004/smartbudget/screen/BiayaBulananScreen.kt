@@ -45,7 +45,6 @@ fun BiayaBulananScreen(navController: NavHostController) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
-
     val budget by viewModel.budget.collectAsState()
     var budgetInput by remember(budget) {
         mutableStateOf(if (budget > 0) budget.toLong().toString() else "")

@@ -17,4 +17,12 @@
     <string name="tagihan">Tagihan</string>
     <string name="tabungan">Tabungan</string>
     <string name="lainnya">Lainnya</string>
+    <string name="menu">Menu</string>
+    <string name="hapus">Hapus</string>
+    <string name="hapus_pengeluaran">Hapus Pengeluaran</string>
+    <string name="validasi_hapus_pengeluaran">Hapus pengeluaran ini?</string>
+    <string name="batal">Batal</string>
+    <string name="ubah_pengeluaran">Ubah Pengeluaran</string>
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">Kategori: %1$s\nNominal: Rp %2$s\nTanggal: %3$s</string>
 </resources>

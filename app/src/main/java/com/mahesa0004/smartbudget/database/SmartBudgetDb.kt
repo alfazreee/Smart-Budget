@@ -31,9 +31,7 @@ abstract class SmartBudgetDb : RoomDatabase() {
                         context.applicationContext,
                         SmartBudgetDb::class.java,
                         "smartbudget.db"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
+                    ).build()
                     INSTANCE = instance
                 }
                 return instance

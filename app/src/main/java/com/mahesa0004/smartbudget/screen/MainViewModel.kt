@@ -20,13 +20,16 @@ class MainViewModel(
     private val budgetDao: BudgetDao,
     private val pengeluaranDao: PengeluaranDao
 ) : ViewModel() {
-    val budget: StateFlow<Double> = budgetDao.getBudget()
-        .map { it?.amount ?: 0.0 }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = 0.0
-        )
+
+    val budget: StateFlow<Double> =
+        budgetDao.getBudget()
+            .map { it?.amount ?: 0.0 }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = 0.0
+            )
+
     val pengeluaranList: StateFlow<List<Pengeluaran>> =
         pengeluaranDao.getAllPengeluaran()
             .stateIn(
@@ -34,6 +37,7 @@ class MainViewModel(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
+
     val spent: StateFlow<Double> =
         pengeluaranDao.getAllPengeluaran()
             .map { list ->
@@ -64,7 +68,6 @@ class MainViewModel(
             "dd-MM-yyyy   HH:mm:ss",
             Locale.getDefault()
         ).format(Date())
-
         viewModelScope.launch(Dispatchers.IO) {
             pengeluaranDao.insert(
                 Pengeluaran(
@@ -74,5 +77,35 @@ class MainViewModel(
                 )
             )
         }
+    }
+
+    suspend fun getPengeluaranById(
+        id: Long
+    ): Pengeluaran? {
+
+        return pengeluaranDao
+            .getPengeluaranById(id)
+    }
+
+    fun updatePengeluaran(
+        id: Long,
+        kategori: String,
+        nominal: Double,
+        tanggal: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) { pengeluaranDao.update(
+            Pengeluaran(
+                    id = id,
+                    kategori = kategori,
+                    nominal = nominal,
+                    tanggal = tanggal
+                )
+            )
+        }
+    }
+
+    fun hapusPengeluaran(
+        pengeluaran: Pengeluaran
+    ) { viewModelScope.launch(Dispatchers.IO) { pengeluaranDao.delete(pengeluaran) }
     }
 }

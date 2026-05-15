@@ -8,10 +8,7 @@ data class Pengeluaran(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-
     val kategori: String,
-
     val nominal: Double,
-
     val tanggal: String
 )
