@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,6 +23,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -47,9 +51,13 @@ import androidx.navigation.compose.rememberNavController
 import com.mahesa0004.smartbudget.R
 import com.mahesa0004.smartbudget.navigation.Screen
 import com.mahesa0004.smartbudget.ui.theme.SmartBudgetTheme
+import com.mahesa0004.smartbudget.util.SettingsDataStore
 import com.mahesa0004.smartbudget.util.ViewModelFactory
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +66,8 @@ fun MainScreen(navController: NavController) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
+    val dataStore = SettingsDataStore(context)
+    val showList by dataStore.layoutFlow.collectAsState(true)
 
     Scaffold(
         topBar = {
@@ -68,7 +78,26 @@ fun MainScreen(navController: NavController) {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveLayout(!showList)
+                        }
+                    }) {
+                        Icon(
+                            painter = painterResource(
+                                if (showList) R.drawable.baseline_grid_view_24
+                                else R.drawable.outline_lists_24
+                            ),
+                            contentDescription = stringResource(
+                                if (showList) R.string.grid
+                                else R.string.list
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -85,6 +114,7 @@ fun MainScreen(navController: NavController) {
         }
     ) { innerPadding ->
         ScreenContent(
+            showList = showList,
             modifier = Modifier.padding(innerPadding),
             navController = navController,
             viewModel = viewModel
@@ -94,6 +124,7 @@ fun MainScreen(navController: NavController) {
 
 @Composable
 fun ScreenContent(
+    showList: Boolean,
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: MainViewModel
@@ -126,46 +157,88 @@ fun ScreenContent(
                 navController.navigate(Screen.BiayaBulanan.route)
             }
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            items(pengeluaranList) { item ->
-                Card(
-                    onClick = {
-                        navController.navigate(
-                            Screen.UbahPengeluaran.withId(item.id)
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE0E0E0)
-                    )
-                ) {
-                    Row(
+        if (showList) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                items(pengeluaranList) { item ->
+                    Card(
+                        onClick = {
+                            navController.navigate(
+                                Screen.UbahPengeluaran.withId(item.id)
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(vertical = 4.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFE0E0E0)
+                        )
                     ) {
-                        Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(
+                                    text = item.kategori,
+                                    fontSize = 18.sp
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text(
+                                    text = item.tanggal,
+                                    fontSize = 14.sp
+                                )
+                            }
                             Text(
-                                text = item.kategori,
-                                fontSize = 18.sp
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Text(
-                                text = item.tanggal,
-                                fontSize = 14.sp
+                                text = "-${formatRupiah(item.nominal)}",
+                                fontSize = 16.sp
                             )
                         }
-                        Text(
-                            text = "-${formatRupiah(item.nominal)}",
-                            fontSize = 16.sp
+                    }
+                }
+            }
+        } else {
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                columns = StaggeredGridCells.Fixed(2),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(pengeluaranList) { item ->
+                    Card(
+                        onClick = {
+                            navController.navigate(
+                                Screen.UbahPengeluaran.withId(item.id)
+                            )
+                        },
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFE0E0E0)
                         )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = item.kategori,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = "-${formatRupiah(item.nominal)}",
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                text = item.tanggal,
+                                fontSize = 12.sp
+                            )
+                        }
                     }
                 }
             }
