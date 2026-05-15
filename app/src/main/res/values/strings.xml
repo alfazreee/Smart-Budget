@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Smart Budget</string>
     <string name="logo_aplikasi">Logo Aplikasi</string>
+    <string name="tagline">Anggaran Cerdas, Hidup Sederhana.</string>
     <string name="Bagikan">Bagikan</string>
     <string name="biaya_bulanan">Biaya bulanan</string>
     <string name="kembali">Kembali</string>

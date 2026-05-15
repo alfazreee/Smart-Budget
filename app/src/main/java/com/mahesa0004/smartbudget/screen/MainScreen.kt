@@ -146,7 +146,7 @@ fun ScreenContent(
             modifier = Modifier.size(120.dp)
         )
         Text(
-            text = "Smart Budget, Simple Life.",
+            text = stringResource(R.string.tagline),
             fontSize = 20.sp,
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -271,7 +271,7 @@ fun BiayaBulananCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Biaya bulanan", color = Color.Black, modifier = Modifier.padding(2.dp))
+                Text(text = stringResource(R.string.biaya_bulanan), color = Color.Black, modifier = Modifier.padding(2.dp))
                 Text(text = date, color = Color.Black, modifier = Modifier.padding(2.dp))
             }
 

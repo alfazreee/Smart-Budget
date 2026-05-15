@@ -2,6 +2,7 @@ package com.mahesa0004.smartbudget.screen
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -93,7 +94,18 @@ fun UbahPengeluaranScreen(
                     IconButton(
                         onClick = {
                             val nominal = inputPengeluaran.toDoubleOrNull()
-                                ?: return@IconButton
+                            if (
+                                nominal == null ||
+                                nominal <= 0 ||
+                                selectedKategori.isBlank()
+                            ) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.input_pengeluaran),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@IconButton
+                            }
                             scope.launch {
                                 viewModel.updatePengeluaran(
                                     id = id,

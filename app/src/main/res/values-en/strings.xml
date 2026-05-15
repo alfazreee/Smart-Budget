@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Budget</string>
+    <string name="logo_aplikasi">App Logo</string>
+    <string name="tagline">Smart Budget, Simple Life.</string>
+    <string name="Bagikan">Share</string>
+    <string name="biaya_bulanan">Monthly Expense</string>
+    <string name="kembali">Back</string>
+    <string name="budget">Budget</string>
+    <string name="per_bulan">/month</string>
+    <string name="simpan">Save</string>
+    <string name="budget_kosong">Budget cannot be empty</string>
+    <string name="tambah_pengeluaran">Add Expense</string>
+    <string name="input_pengeluaran">Enter Expense</string>
+    <string name="makanan">Food</string>
+    <string name="transportasi">Transportation</string>
+    <string name="belanja">Shopping</string>
+    <string name="hiburan">Entertainment</string>
+    <string name="tagihan">Bills</string>
+    <string name="tabungan">Savings</string>
+    <string name="lainnya">Others</string>
+    <string name="menu">Menu</string>
+    <string name="hapus">Delete</string>
+    <string name="hapus_pengeluaran">Delete Expense</string>
+    <string name="validasi_hapus_pengeluaran">Delete this expense?</string>
+    <string name="batal">Cancel</string>
+    <string name="ubah_pengeluaran">Edit Expense</string>
+    <string name="bagikan">Share</string>
+    <string name="bagikan_template">Category: %1$s[...]</string>
+    <string name="list">List View</string>
+    <string name="grid">Grid View</string>
+</resources>
